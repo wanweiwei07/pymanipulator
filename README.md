@@ -3,7 +3,7 @@ HLab B4 Robot Study
 
 The source code is for education purpose.
 It is specially developed for new student joining our lab at Osaka University:
-https://www.roboticmanipulation.org
+https://www.roboticmanipulation.org.
 If you are interested in becoming a member our lab, 
 don't hesitate to send me emails.
 
