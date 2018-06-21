@@ -377,7 +377,6 @@ class Rtq85NM():
         self.rtq85np.lookAt(x, y, z)
         self.rtq85np.setMat(rotmat4z*self.rtq85np.getMat())
 
-
     def gripAt(self, fcx, fcy, fcz, c0nx, c0ny, c0nz, rotangle = 0, jawwidth = 82):
         '''
         set the hand to grip at fcx, fcy, fcz, fc = finger center
@@ -390,65 +389,14 @@ class Rtq85NM():
         '''
 
         self.rtq85np.setMat(Mat4.identMat())
-        self.rtq85np.setMat(Mat4.identMat())
         self.setJawwidth(jawwidth)
-        self.rtq85np.lookAt(c0nx, c0ny, c0nz)
         self.rtq85np.lookAt(c0nx, c0ny, c0nz)
         rotmat4x = Mat4.rotateMat(rotangle, Vec3(c0nx, c0ny, c0nz))
         self.rtq85np.setMat(self.rtq85np.getMat()*rotmat4x)
         rotmat4 = Mat4(self.rtq85np.getMat())
-        handtipvec3 = rotmat4.getRow3(0)*145.0
+        handtipvec3 = rotmat4.getRow3(0)*(145.0)
         rotmat4.setRow(3, Vec3(fcx, fcy, fcz)+handtipvec3)
         self.rtq85np.setMat(rotmat4)
-
-    def plot(self, pandabase, nodepath=None, pos=None, ydirect=None, zdirect=None, rgba=None):
-        '''
-        plot the hand under the given nodepath
-
-        ## input
-        pandabase:
-            a showbase instance
-        nodepath:
-            the parent node this hand is going to be attached to
-        pos:
-            the position of the hand
-        ydirect:
-            the y direction of the hand
-        zdirect:
-            the z direction of the hand
-        rgba:
-            the rgba color
-
-        ## note:
-            dot(ydirect, zdirect) must be 0
-
-        date: 20160628
-        author: weiwei
-        '''
-
-        if nodepath is None:
-            nodepath = pandabase.render
-        if pos is None:
-            pos = Vec3(0,0,0)
-        if ydirect is None:
-            ydirect = Vec3(0,1,0)
-        if zdirect is None:
-            zdirect = Vec3(0,0,1)
-        if rgba is None:
-            rgba = Vec4(1,1,1,0.5)
-
-        # assert(ydirect.dot(zdirect)==0)
-
-        placeholder = nodepath.attachNewNode("rtq85holder")
-        self.rtq85np.instanceTo(placeholder)
-        xdirect = ydirect.cross(zdirect)
-        transmat4 = Mat4()
-        transmat4.setCol(0, xdirect)
-        transmat4.setCol(1, ydirect)
-        transmat4.setCol(2, zdirect)
-        transmat4.setCol(3, pos)
-        self.rtq85np.setMat(transmat4)
-        placeholder.setColor(rgba)
 
 def newHandNM(jawwidth = 85, hndcolor = None):
     return Rtq85NM(jawwidth, hndcolor)

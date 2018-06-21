@@ -76,7 +76,7 @@ class FreegripContactpairs(object):
         #     facetnormal = np.sum(self.objtrimesh.face_normals[faces], axis=0)
         #     facetnormal = facetnormal/np.linalg.norm(facetnormal)
         #     self.facetnormals.append(facetnormal)
-        self.facetcolorarray = pandageom.randomColorArray(self.facets.shape[0], nonrandcolor = [.5,.5,.7,1])
+        self.facetcolorarray = pandageom.randomColorArray(self.facets.shape[0])
         tic = time.time()
         self.sampleObjModel()
         toc = time.time()
@@ -321,12 +321,13 @@ class FreegripContactpairs(object):
                 self.objsamplepnts_refcls[i] = np.empty(shape=(0,0))
                 self.objsamplenrmls_refcls[i] = np.empty(shape=(0,0))
 
-    def planContactpairs(self, torqueresist = 50, fgrtipdist = 82):
+    def planContactpairs(self, torqueresist = 50, fgrtipdist = 82, dotnormpara = -0.75):
         """
         find the grasps using parallel pairs
 
         :param: torqueresist the maximum allowable distance to com
         :param: fgrtipdist the maximum dist between finger tips
+        :param: dotnormpara parallelity
         :return:
 
         author: weiwei
@@ -371,7 +372,7 @@ class FreegripContactpairs(object):
                 continue
             # check if the faces are opposite and parallel
             dotnorm = np.dot(self.facetnormals[facetpair[0]], self.facetnormals[facetpair[1]])
-            if dotnorm < -0.75:
+            if dotnorm < dotnormpara:
                 # check if any samplepnts's projection from facetpairs[i][0] falls in the polygon of facetpairs[i][1]
                 facet0pnts = self.objsamplepnts_refcls[facetpair[0]]
                 facet0normal = self.facetnormals[facetpair[0]]

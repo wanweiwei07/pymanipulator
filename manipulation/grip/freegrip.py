@@ -19,7 +19,7 @@ import time
 
 class Freegrip(fgcp.FreegripContactpairs):
 
-    def __init__(self, objpath, handpkg, readser=False, torqueresist = 50):
+    def __init__(self, objpath, handpkg, readser=False, torqueresist = 50, dotnormpara = -.75):
         """
         initialization
 
@@ -42,7 +42,7 @@ class Freegrip(fgcp.FreegripContactpairs):
             toc = time.time()
             print "cluster samples cost", toc-tic
             tic = time.time()
-            self.planContactpairs(torqueresist)
+            self.planContactpairs(torqueresist,dotnormpara=dotnormpara)
             toc = time.time()
             print "plan contact pairs cost", toc-tic
             self.saveSerialized("tmpcp.pickle")
@@ -326,11 +326,11 @@ class Freegrip(fgcp.FreegripContactpairs):
             cctnormal1raw = (cctnormal10 + cctnormal11)
             cctnormal1 = (cctnormal1raw/np.linalg.norm(cctnormal1raw)).tolist()
             handfgrpcc0 = NodePath("handfgrpcc0")
-            self.handfgrpcc_uninstanced.instanceTo(rtq85pcc0)
+            self.handfgrpcc_uninstanced.instanceTo(handfgrpcc0)
             handfgrpcc0.setPos(cctpnt0[0], cctpnt0[1], cctpnt0[2])
             handfgrpcc0.lookAt(cctpnt0[0] + cctnormal0[0], cctpnt0[1] + cctnormal0[1], cctpnt0[2] + cctnormal0[2])
             handfgrpcc1 = NodePath("handfgrpcc1")
-            self.handfgrpcc_uninstanced.instanceTo(rtq85pcc1)
+            self.handfgrpcc_uninstanced.instanceTo(handfgrpcc1)
             handfgrpcc1.setPos(cctpnt1[0], cctpnt1[1], cctpnt1[2])
             handfgrpcc1.lookAt(cctpnt1[0] + cctnormal1[0], cctpnt1[1] + cctnormal1[1], cctpnt1[2] + cctnormal1[2])
             handfgrpcc =  NodePath("handfgrpcc")
@@ -343,8 +343,8 @@ class Freegrip(fgcp.FreegripContactpairs):
 
             for contact in result.getContacts():
                 cp = contact.getManifoldPoint()
-                pandageom.plotSphere(brchild, pos=cp.getLocalPointA(), radius=3, rgba=Vec4(1, 0, 0, 1))
-                pandageom.plotSphere(brchild, pos=cp.getLocalPointB(), radius=3, rgba=Vec4(0, 0, 1, 1))
+                base.pggen.plotSphere(brchild, pos=cp.getLocalPointA(), radius=3, rgba=Vec4(1, 0, 0, 1))
+                base.pggen.plotSphere(brchild, pos=cp.getLocalPointB(), radius=3, rgba=Vec4(0, 0, 1, 1))
 
             if result.getNumContacts():
                 handfgrpcc0.setColor(1, 0, 0, .3)
@@ -357,11 +357,11 @@ class Freegrip(fgcp.FreegripContactpairs):
             handfgrpcc1.setTransparency(TransparencyAttrib.MAlpha)
             handfgrpcc0.reparentTo(brchild)
             handfgrpcc1.reparentTo(brchild)
-            pandageom.plotArrow(star0, spos=cctpnt0,
+            base.pggen.plotArrow(star0, spos=cctpnt0,
                             epos=cctpnt0 + plotoffsetfp*self.facetnormals[facetidx0] + cctnormal0,
                             rgba=[facetcolorarray[facetidx0][0], facetcolorarray[facetidx0][1],
                                   facetcolorarray[facetidx0][2], facetcolorarray[facetidx0][3]], length=10)
-            pandageom.plotArrow(star1, spos=cctpnt1,
+            base.pggen.plotArrow(star1, spos=cctpnt1,
                             epos=cctpnt1 + plotoffsetfp*self.facetnormals[facetidx1] + cctnormal1,
                             rgba=[facetcolorarray[facetidx1][0], facetcolorarray[facetidx1][1],
                                   facetcolorarray[facetidx1][2], facetcolorarray[facetidx1][3]], length=10)

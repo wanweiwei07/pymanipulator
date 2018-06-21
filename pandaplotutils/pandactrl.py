@@ -54,6 +54,7 @@ class World(ShowBase, object):
         self.__ptlightnode2.setPos(-self.cam.getPos().length(), 0, base.cam.getPos().length())
         self.render.setLight(self.__ptlightnode2)
 
+        self.pg = pg
         self.pggen = pg.PandaGeomGen()
 
         # set up inputmanager

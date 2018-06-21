@@ -61,7 +61,7 @@ if __name__ == '__main__':
     import os
     from panda3d.core import *
     import pandaplotutils.pandageom as pg
-    obsrotmat4 = Mat4(1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0,0.0,400,-300,50,1.0)
+    obsrotmat4 = Mat4(1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0,0.0,400,-300,200,1.0)
     this_dir, this_filename = os.path.split(__file__)
     objpath = os.path.join(os.path.split(this_dir)[0], "manipulation/grip", "objects", "bunnysim.stl")
     objmnp = pg.genObjmnp(objpath, color=Vec4(.7, .7, 0, 1))

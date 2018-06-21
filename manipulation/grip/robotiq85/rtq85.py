@@ -249,14 +249,6 @@ class Rtq85():
 
         self.rtq85np.removeNode()
 
-    def removeNode(self):
-        """
-
-        :return:
-        """
-
-        self.rtq85np.removeNode()
-
     def lookAt(self, direct0, direct1, direct2):
         """
         set the Y axis of the hnd
@@ -267,50 +259,71 @@ class Rtq85():
 
         self.rtq85np.lookAt(direct0, direct1, direct2)
 
-    def plot(self, nodepath, pos=None, ydirect=None, zdirect=None, rgba=None):
+    def gripAt(self, fcx, fcy, fcz, c0nx, c0ny, c0nz, rotangle = 0, jawwidth = 82):
         '''
-        plot the hand under the given nodepath
+        set the hand to grip at fcx, fcy, fcz, fc = finger center
+        the normal of the sglfgr contact is set to be c0nx, c0ny, c0nz
+        the rotation around the normal is set to rotangle
+        the jawwidth is set to jawwidth
 
-        ## input
-        nodepath:
-            the parent node this hand is going to be attached to
-        pos:
-            the position of the hand
-        ydirect:
-            the y direction of the hand
-        zdirect:
-            the z direction of the hand
-        rgba:
-            the rgba color
-
-        ## note:
-            dot(ydirect, zdirect) must be 0
-
-        date: 20160628
+        date: 20170322
         author: weiwei
         '''
 
-        if pos is None:
-            pos = Vec3(0,0,0)
-        if ydirect is None:
-            ydirect = Vec3(0,1,0)
-        if zdirect is None:
-            zdirect = Vec3(0,0,1)
-        if rgba is None:
-            rgba = Vec4(1,1,1,0.5)
+        self.rtq85np.setMat(Mat4.identMat())
+        self.setJawwidth(jawwidth)
+        self.rtq85np.lookAt(c0nx, c0ny, c0nz)
+        rotmat4x = Mat4.rotateMat(rotangle, Vec3(c0nx, c0ny, c0nz))
+        self.rtq85np.setMat(self.rtq85np.getMat()*rotmat4x)
+        rotmat4 = Mat4(self.rtq85np.getMat())
+        handtipvec3 = rotmat4.getRow3(0)*(145.0)
+        rotmat4.setRow(3, Vec3(fcx, fcy, fcz)+handtipvec3)
+        self.rtq85np.setMat(rotmat4)
 
-        # assert(ydirect.dot(zdirect)==0)
-
-        placeholder = nodepath.attachNewNode("rtq85holder")
-        self.rtq85np.instanceTo(placeholder)
-        xdirect = ydirect.cross(zdirect)
-        transmat4 = Mat4()
-        transmat4.setCol(0, xdirect)
-        transmat4.setCol(1, ydirect)
-        transmat4.setCol(2, zdirect)
-        transmat4.setCol(3, pos)
-        self.rtq85np.setMat(transmat4)
-        placeholder.setColor(rgba)
+    # def plot(self, nodepath, pos=None, ydirect=None, zdirect=None, rgba=None):
+    #     '''
+    #     plot the hand under the given nodepath
+    #
+    #     ## input
+    #     nodepath:
+    #         the parent node this hand is going to be attached to
+    #     pos:
+    #         the position of the hand
+    #     ydirect:
+    #         the y direction of the hand
+    #     zdirect:
+    #         the z direction of the hand
+    #     rgba:
+    #         the rgba color
+    #
+    #     ## note:
+    #         dot(ydirect, zdirect) must be 0
+    #
+    #     date: 20160628
+    #     author: weiwei
+    #     '''
+    #
+    #     if pos is None:
+    #         pos = Vec3(0,0,0)
+    #     if ydirect is None:
+    #         ydirect = Vec3(0,1,0)
+    #     if zdirect is None:
+    #         zdirect = Vec3(0,0,1)
+    #     if rgba is None:
+    #         rgba = Vec4(1,1,1,0.5)
+    #
+    #     # assert(ydirect.dot(zdirect)==0)
+    #
+    #     placeholder = nodepath.attachNewNode("rtq85holder")
+    #     self.rtq85np.instanceTo(placeholder)
+    #     xdirect = ydirect.cross(zdirect)
+    #     transmat4 = Mat4()
+    #     transmat4.setCol(0, xdirect)
+    #     transmat4.setCol(1, ydirect)
+    #     transmat4.setCol(2, zdirect)
+    #     transmat4.setCol(3, pos)
+    #     self.rtq85np.setMat(transmat4)
+    #     placeholder.setColor(rgba)
 
 if __name__=='__main__':
 
@@ -336,13 +349,9 @@ if __name__=='__main__':
     hndpos = Vec3(0,0,0)
     ydirect = Vec3(0,1,0)
     zdirect = Vec3(0,0,1)
-    rtq85hnd.plot(base.render, pos=hndpos, ydirect=ydirect, zdirect=zdirect)
-
-    axis = loader.loadModel('zup-axis.egg')
-    axis.reparentTo(base.render)
-    axis.setPos(hndpos)
-    axis.setScale(50)
-    axis.lookAt(hndpos+ydirect)
+    # rtq85hnd.gripAt(0,0,0,1,0,0)
+    rtq85hnd.reparentTo(base.render)
+    base.pggen.plotAxis(base.render)
 
     bullcldrnp = base.render.attachNewNode("bulletcollider")
     base.world = BulletWorld()
@@ -392,11 +401,10 @@ if __name__=='__main__':
     result = base.world.contactTestPair(bbullnode, ilkbullnode)
     print result
     print result.getContacts()
-    import pandaplotutils.pandageom as pandageom
     for contact in result.getContacts():
         cp = contact.getManifoldPoint()
         print cp.getLocalPointA()
-        pandageom.plotSphere(base.render, pos=cp.getLocalPointA(), radius=1, rgba=Vec4(1,0,0,1))
+        base.pggen.plotSphere(base.render, pos=cp.getLocalPointA(), radius=1, rgba=Vec4(1,0,0,1))
 
     debugNode = BulletDebugNode('Debug')
     debugNode.showWireframe(True)
