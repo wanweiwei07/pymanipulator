@@ -140,8 +140,8 @@ def numik(nxtrobot, tgtpos, tgtrot, armid="rgt"):
     steplength = 5
     steplengthinc = 10
     armjntssave = nxtrobot.getarmjnts(armid)
-    armjointsiter = nxtrobot.getinitarmjnts(armid)
-    nxtrobot.movearmfk(armjointsiter)
+    armjntsiter = nxtrobot.getinitarmjnts(armid)
+    nxtrobot.movearmfk(armjntsiter)
     errnormlast = 0.0
     nlocalencountered = 0
     for i in range(100):

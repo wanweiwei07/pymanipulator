@@ -13,34 +13,34 @@ objpath = os.path.join(this_dir, "../manipulation/grip/objects", "plane.stl")
 # base.run()
 handpkg = rtq85nm
 
-freegriptst = freegrip.Freegrip(objpath, handpkg, readser=False, torqueresist = 50, dotnormpara=-.6)
+freegriptst = freegrip.Freegrip(objpath, handpkg, readser=False, torqueresist = 100, dotnormpara=-.6)
 freegriptst.segShow(base, togglesamples=False, togglenormals=False,
                     togglesamples_ref=False, togglenormals_ref=False,
                     togglesamples_refcls=False, togglenormals_refcls=False)
 
 freegriptst.removeFgrpcc(base)
-# freegriptst.removeHndcc(base, discretesize=16)
+freegriptst.removeHndcc(base, discretesize=16)
 
-# gdb = db.GraspDB()
-# freegriptst.saveToDB(gdb)
-# #
-# data = gdb.loadFreeAirGrip('planerearstay22', 'rtq85')
-# if data:
-#     freegripid, freegripcontacts, freegripnormals, freegriprotmats, freegripjawwidth = data
-#     print len(freegripid)
-#     for i, freegriprotmat in enumerate(freegriprotmats):
-#         # if i>120 and i-120 < 30:
-#         rtqhnd = rtq85nm.Rtq85NM(hndcolor=[1, 1, 1, .2])
-#         rtqhnd.setMat(pandanpmat4=freegriprotmat)
-#         rtqhnd.setJawwidth(freegripjawwidth[i])
-#         rtqhnd.reparentTo(base.render)
+gdb = db.GraspDB()
+freegriptst.saveToDB(gdb)
+#
+data = gdb.loadFreeAirGrip('plane', 'rtq85')
+if data:
+    freegripid, freegripcontacts, freegripnormals, freegriprotmats, freegripjawwidth = data
+    print len(freegripid)
+    for i, freegriprotmat in enumerate(freegriprotmats):
+        # if i>120 and i-120 < 30:
+        rtqhnd = rtq85nm.Rtq85NM(hndcolor=[1, 1, 1, .2])
+        rtqhnd.setMat(pandanpmat4=freegriprotmat)
+        rtqhnd.setJawwidth(freegripjawwidth[i])
+        rtqhnd.reparentTo(base.render)
 
 
-def updateshow(task):
-    # freegriptst.removeFgrpccShow(base)
-    # freegriptst.removeFgrpccShowLeft(base)
-    freegriptst.removeHndccShow(base)
-    return task.again
-taskMgr.doMethodLater(.1, updateshow, "tickTask")
+# def updateshow(task):
+#     freegriptst.removeFgrpccShow(base)
+#     # freegriptst.removeFgrpccShowLeft(base)
+#     # freegriptst.removeHndccShow(base)
+#     return task.again
+# taskMgr.doMethodLater(.1, updateshow, "tickTask")
 
 base.run()

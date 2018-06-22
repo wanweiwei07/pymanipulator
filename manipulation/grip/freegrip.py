@@ -271,7 +271,8 @@ class Freegrip(fgcp.FreegripContactpairs):
 
         npbrchild = base.render.find("**/tempplot")
         if npbrchild:
-            npbrchild.removeNode()
+            # npbrchild.removeNode()
+            pass
 
         # for fast delete
         brchild = NodePath('tempplot')
