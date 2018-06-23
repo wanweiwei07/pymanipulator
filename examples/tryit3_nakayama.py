@@ -13,7 +13,7 @@ objpath = os.path.join(this_dir, "../manipulation/grip/objects", "plane.stl")
 # base.run()
 handpkg = rtq85nm
 
-freegriptst = freegrip.Freegrip(objpath, handpkg, readser=False, torqueresist = 100, dotnormpara=-.6)
+freegriptst = freegrip.Freegrip(objpath, handpkg, readser=False, torqueresist = 70, dotnormplan=.90, dotnoarmovlp=.95, dotnormpara = -.80)
 freegriptst.segShow(base, togglesamples=False, togglenormals=False,
                     togglesamples_ref=False, togglenormals_ref=False,
                     togglesamples_refcls=False, togglenormals_refcls=False)

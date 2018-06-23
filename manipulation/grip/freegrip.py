@@ -19,7 +19,7 @@ import time
 
 class Freegrip(fgcp.FreegripContactpairs):
 
-    def __init__(self, objpath, handpkg, readser=False, torqueresist = 50, dotnormpara = -.75):
+    def __init__(self, objpath, handpkg, readser=False, torqueresist = 50, dotnormplan=.95, dotnoarmovlp=.95, dotnormpara = -.75):
         """
         initialization
 
@@ -31,7 +31,7 @@ class Freegrip(fgcp.FreegripContactpairs):
         date: 20161201, osaka
         """
 
-        super(self.__class__, self).__init__(objpath, readser)
+        super(self.__class__, self).__init__(objpath, dotnormplan=dotnormplan, dotnoarmovlp=dotnoarmovlp, readser=readser)
         if readser is False:
             tic = time.time()
             self.removeBadSamples(mindist=2, maxdist=20)

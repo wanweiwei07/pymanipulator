@@ -26,7 +26,7 @@ import time
 
 class FreegripContactpairs(object):
 
-    def __init__(self, ompath, readser=False):
+    def __init__(self, ompath, dotnormplan=.95, dotnoarmovlp=.95, readser=False):
         self.objtrimesh = None
         # the sampled points and their normals
         self.objsamplepnts = None
@@ -54,16 +54,16 @@ class FreegripContactpairs(object):
         self.counter = 0
         self.pggen = pandageom.PandaGeomGen()
         if readser is False:
-            self.loadObjModel(ompath)
+            self.loadObjModel(ompath, dotnormplan=dotnormplan, dotnoarmovlp=dotnoarmovlp)
             self.saveSerialized("tmpnocp.pickle")
         else:
             self.loadSerialized("tmpnocp.pickle", ompath)
 
-    def loadObjModel(self, ompath):
+    def loadObjModel(self, ompath, dotnormplan=.95, dotnoarmovlp=.95):
         self.objtrimesh=trimesh.load_mesh(ompath)
         # oversegmentation
         tic = time.time()
-        self.facets, self.facetnormals = self.objtrimesh.facets_over(faceangle=.95, segangle = .95)
+        self.facets, self.facetnormals = self.objtrimesh.facets_over(faceangle=dotnormplan, segangle = dotnoarmovlp)
         toc = time.time()
         print "facet cost", toc -tic
         # show original triangles
